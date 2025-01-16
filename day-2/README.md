@@ -1,113 +1,95 @@
-Frontend Enhancements
-User Authentication:
+Day 2 Activities: Technical Foundation Planning
+1. Define Technical Requirements
+For each feature outlined on Day 1, break down the technical requirements into specific categories.
 
-Allow customers to create accounts and log in to save their orders and preferences.
-Use JWT for authentication and secure session management.
-Search and Filtering:
+Frontend Requirements:
 
-Add product search functionality (e.g., by name or category).
-Filters for product attributes (e.g., price range, availability).
-Wishlist/Favorites:
+A responsive, user-friendly interface for browsing dairy and bakery products.
+Pages for Home, Product Listing, Product Details, Cart, Checkout, and Order Confirmation.
+Ensure smooth integration with the backend for product data display and checkout functionality.
+Sanity CMS as Backend:
 
-Allow customers to add products to a wishlist for future purchases.
-Mobile-Friendly Features:
-
-Add sticky navigation and call-to-action buttons optimized for mobile users.
-  
-Sanity CMS Enhancements
-Categories and Subcategories:
-
-Structure products into hierarchical categories for better organization.
-
-{ name: 'category', type: 'document', fields: [
-  { name: 'name', type: 'string', title: 'Category Name' },
-  { name: 'parent', type: 'reference', to: [{ type: 'category' }], title: 'Parent Category' }
-] }
-Customer Schema:
-
-Create a schema to store customer profiles (name, email, purchase history, etc.).
-Reviews and Ratings:
-
-Allow customers to leave reviews for products and rate them.
-
-{ name: 'review', type: 'document', fields: [
-  { name: 'product', type: 'reference', to: [{ type: 'product' }], title: 'Product' },
-  { name: 'customer', type: 'reference', to: [{ type: 'customer' }], title: 'Customer' },
-  { name: 'rating', type: 'number', title: 'Rating (1-5)' },
-  { name: 'comment', type: 'text', title: 'Review Comment' }
-] }
-
-
-Sanity CMS:
-
-Acts as the database for products, orders, and user data.
+Use Sanity CMS to manage product information, customer details, and order records.
+Design CMS schemas that support the quick-commerce nature of the marketplace, ensuring easy management of perishable product data.
+Create reference relationships in Sanity to track product categories, brands, and availability.
 Third-Party APIs:
 
-Handles payment processing and shipment tracking.
-Draft Architecture:
+Integrate external APIs for payment processing, shipment tracking, and real-time inventory updates.
+Ensure APIs support the necessary data flow from frontend to backend and third-party services.
+2. Design System Architecture
+Create a high-level diagram of the system architecture that includes the following components:
 
-[Frontend (Next.js)]
-    |
-    --> [Sanity CMS] --> [Products API]
-    |
-    --> [Third-Party APIs] --> [Shipment Tracking API / Payment Gateway]
-  
-API Enhancements
-Authentication APIs:
+Frontend (Next.js): The user interface where customers interact with the platform.
+Sanity CMS: Backend CMS for managing product data and customer details.
+Third-Party APIs: External APIs used for payment processing and shipment tracking.
+Example System Flow:
 
-/login: For user login.
-/register: For new user registration.
-/logout: To securely end sessions.
-Advanced Cart Management:
-
-/cart/add: Add items to the cart.
-/cart/update: Update item quantity.
-/cart/remove: Remove items.
-Order Tracking:
-
-/orders/:id: Retrieve details for a specific order (products, status, estimated delivery).
-Scalability Considerations
-Performance Optimization:
-
-server-side caching for API responses (e.g., products, categories).
- lazy loading for images and code splitting for better load times.
-
-  API Requirements
-Here’s an example list of API endpoints:
-
-Endpoint	Method	Purpose	Response Example
-/products	GET	Fetch all product listings	{ "id": 1, "name": "Milk", "price": 100, "stock": 20 }
-/product/:id	GET	Fetch single product details	{ "id": 1, "name": "Milk", "price": 100, "stock": 20 }
-/cart	POST	Add product to cart	{ "cartId": 123, "status": "success" }
-/orders	POST	Create a new order	{ "orderId": 456, "status": "pending" }
-/shipment/:orderId	GET	Fetch shipment tracking details for an order	{ "status": "In Transit", "ETA": "15 mins" }
-  
-Database Relationships:
-
-Optimize your Sanity structure for querying related documents (e.g., products linked to categories, orders linked to customers).
-UI/UX Features
-Dynamic Pricing:
-
-Show discounts and promotional pricing.
-Highlight "Limited Stock" or "Fresh Today" badges.
-Real-Time Updates:
-
-Use WebSockets for cart updates and order status tracking in real-time.
-Personalization:
+A customer browses the website and selects products.
+The frontend communicates with the Sanity CMS to fetch product data, including pricing, stock, and descriptions.
+When the user adds products to the cart and proceeds to checkout, order details are saved in the Sanity CMS via API.
+Shipment tracking is integrated using a third-party API that provides real-time updates on order status.
+Payment information is securely processed via a payment gateway, and the transaction is recorded in Sanity CMS.
+System Diagram Example:
 
 
-Analytics Integration:
+[Frontend (Next.js)]  
+  |  
+[Sanity CMS] ---------> [Product Data API]  
+  |  
+[Third-Party API] -----> [Shipment Tracking API]  
+  |  
+[Payment Gateway]
+3. Plan API Requirements
+Define API endpoints based on the product schema and business requirements.
 
-Add Google Analytics or other tracking tools to monitor user behavior.
-Security Considerations
-Payment Security:
+Endpoint Name: /products
 
-Ensure proper encryption (e.g., HTTPS) and PCI compliance.
-Data Validation:
+Method: GET
+Description: Fetch all available products.
+Response Example: { "id": 1, "name": "Fresh Milk", "price": 150, "stock": 30, "image": "link_to_image" }
+Endpoint Name: /orders
 
-Sanitize inputs and validate data for both backend and frontend.
-Role-Based Access Control:
+Method: POST
+Description: Create a new order.
+Payload: { "customerId": 123, "products": [{ "productId": 1, "quantity": 2 }], "paymentStatus": "pending" }
+Response Example: { "orderId": 456, "status": "created" }
+Endpoint Name: /shipment
 
-Protect admin routes and sensitive data with proper user role
+Method: GET
+Description: Fetch shipment tracking details.
+Response Example: { "orderId": 456, "status": "In Transit", "ETA": "30 minutes" }
+4. Write Technical Documentation
+Document all technical decisions, including system architecture, API requirements, and CMS schema designs.
 
-  
+System Architecture Overview:
+Include a clear diagram of how the frontend interacts with Sanity CMS and third-party APIs, providing a high-level view of data flow and interactions.
+
+Key Workflows:
+
+User Registration:
+The user signs up, and data is stored in Sanity CMS, with a confirmation sent to the user.
+
+Product Browsing:
+The user views product categories, and the frontend fetches product details from Sanity CMS.
+
+Order Placement:
+The user adds products to the cart and proceeds to checkout. Order details are saved in Sanity CMS.
+
+Shipment Tracking:
+The user views live tracking updates from the third-party API.
+
+API Documentation:
+List all API endpoints, their methods, and response examples, ensuring clear communication on how each part of the system communicates.
+
+Sanity Schema Example:
+
+export default {
+  name: 'product',
+  type: 'document',
+  fields: [
+    { name: 'name', type: 'string', title: 'Product Name' },
+    { name: 'price', type: 'number', title: 'Price' },
+    { name: 'stock', type: 'number', title: 'Stock Level' },
+    { name: 'image', type: 'image', title: 'Product Image' }
+  ]
+};
